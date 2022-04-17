@@ -4,13 +4,24 @@ const db = require('../../models')
 const Todo = db.Todo
 const User = db.User
 
-
-
 router.get('/:id', (req, res) => {
     const UserId = req.user.id
     const id = req.params.id
-    return Todo.findOne( {id, UserId} )
+    return Todo.findOne({ id, UserId })
         .then(todo => res.render('detail', { todo: todo.toJSON() }))
+        .catch(error => console.log(error))
+})
+
+router.get('/new', (req, res) => {
+    return res.render('new')
+})
+
+router.post('/', (req, res) => {
+    const UserId = req.user.id
+    const name = req.body.name
+
+    return Todo.create({ name, UserId })
+        .then(() => res.redirect('/'))
         .catch(error => console.log(error))
 })
 
